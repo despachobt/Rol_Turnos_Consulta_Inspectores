@@ -356,7 +356,7 @@
     </div>
     <section id="dayTable"></section>
 
-    <div class="source" id="dataSource">Generado desde Rol_Turnos_Ahora_Inspectores.xlsx el 2026-07-18 15:17. Cargando Google Sheets...</div>
+    <div class="source" id="dataSource">Generado desde Rol_Turnos_Ahora_Inspectores.xlsx el 2026-07-18 15:31. Cargando Google Sheets...</div>
   </main>
 
   <div id="changeModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="changeTitle">
@@ -702,12 +702,11 @@
     }
 
     async function postCambio(payload) {
-      await fetch(API_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(payload),
-      });
-      return { ok: true };
+      const params = new URLSearchParams({ action: "saveCambio" });
+      Object.entries(payload).forEach(([key, value]) => params.set(key, value ?? ""));
+      const result = await loadJsonp(`${API_URL}?${params.toString()}`);
+      if (!result.ok) throw new Error(result.error || "No se pudo guardar el cambio");
+      return result;
     }
 
     async function saveChange() {
